@@ -464,19 +464,8 @@ function sortCitiesArray(arr) {
  *           [0,0,0,0,1]]
  */
 function getIdentityMatrix(n) {
-  const identityMatrix = [];
-
-  for (let i = 0; i < n; i += 1) {
-    const row = [];
-
-    for (let j = 0; j < n; j += 1) {
-      row.push(i === j ? 1 : 0);
-    }
-
-    identityMatrix.push(row);
-  }
-
-  return identityMatrix;
+  return Array(n).fill(Array(n).fill())
+    .map((xs, i) => xs.map((x, j) => (i === j ? 1 : 0)));
 }
 
 /**
@@ -493,13 +482,7 @@ function getIdentityMatrix(n) {
  *     3, 3   => [ 3 ]
  */
 function getIntervalArray(start, end) {
-  const intervalArray = [];
-
-  for (let i = start; i <= end; i += 1) {
-    intervalArray.push(i);
-  }
-
-  return intervalArray;
+  return Array.from({ length: end - start + 1 }, (_, index) => start + index);
 }
 
 /**
@@ -547,8 +530,19 @@ function distinct(arr) {
  *    "Poland" => ["Lodz"]
  *   }
  */
-function group(/* array, keySelector, valueSelector */) {
-  throw new Error('Not implemented');
+function group(array, keySelector, valueSelector) {
+  return array.reduce((resultMap, item) => {
+    const key = keySelector(item);
+    const value = valueSelector(item);
+
+    if (resultMap.has(key)) {
+      resultMap.get(key).push(value);
+    } else {
+      resultMap.set(key, [value]);
+    }
+
+    return resultMap;
+  }, new Map());
 }
 
 
@@ -565,8 +559,8 @@ function group(/* array, keySelector, valueSelector */) {
  *   [[1, 2], [3, 4], [5, 6]], (x) => x     =>   [ 1, 2, 3, 4, 5, 6 ]
  *   ['one','two','three'], (x) => x.split('')  =>   ['o','n','e','t','w','o','t','h','r','e','e']
  */
-function selectMany(/* arr, childrenSelector */) {
-  throw new Error('Not implemented');
+function selectMany(arr, childrenSelector) {
+  return arr.flatMap(childrenSelector);
 }
 
 
@@ -605,8 +599,11 @@ function getElementByIndexes(arr, indexes) {
  *   [ 1, 2, 3, 4, 5, 6, 7, 8 ]   =>  [ 5, 6, 7, 8, 1, 2, 3, 4 ]
  *
  */
-function swapHeadAndTail(/* arr */) {
-  throw new Error('Not implemented');
+function swapHeadAndTail(arr) {
+  const head = arr.slice(0, Math.round((arr.length - 1) / 2));
+  const tail = arr.slice(Math.round(arr.length / 2), arr.length);
+  const middle = arr.slice(Math.round((arr.length - 1) / 2), Math.round(arr.length / 2));
+  return [].concat(tail, middle, head);
 }
 
 
