@@ -317,8 +317,15 @@ function isCreditCardNumber(/* ccn */) {
  *   10000 ( 1+0+0+0+0 = 1 ) => 1
  *   165536 (1+6+5+5+3+6 = 26,  2+6 = 8) => 8
  */
-function getDigitalRoot(/* num */) {
-  throw new Error('Not implemented');
+function getDigitalRoot(num) {
+  let number = num;
+
+  while (number > 9) {
+    const digits = number.toString().split('').map(Number);
+    number = digits.reduce((sum, digit) => sum + digit, 0);
+  }
+
+  return number;
 }
 
 
@@ -343,8 +350,33 @@ function getDigitalRoot(/* num */) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
+function isBracketsBalanced(str) {
+  const arr = [];
+
+  for (let i = 0; i < str.length; i += 1) {
+    const char = str[i];
+
+    if (char === '[' || char === '(' || char === '{' || char === '<') {
+      arr.push(char);
+    } else if (char === ']' || char === ')' || char === '}' || char === '>') {
+      if (arr.length === 0) {
+        return false;
+      }
+
+      const top = arr.pop();
+
+      if (
+        (char === ']' && top !== '[')
+        || (char === ')' && top !== '(')
+        || (char === '}' && top !== '{')
+        || (char === '>' && top !== '<')
+      ) {
+        return false;
+      }
+    }
+  }
+
+  return arr.length === 0;
 }
 
 
@@ -385,8 +417,22 @@ function toNaryString(num, n) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/verbalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(pathes) {
+  const pathPartsArray = pathes.map((path) => path.split('/'));
+
+  let commonPath = '';
+
+  for (let i = 0; i < pathPartsArray[0].length; i += 1) {
+    const currentPart = pathPartsArray[0][i];
+
+    if (pathPartsArray.every((parts) => parts[i] === currentPart)) {
+      commonPath += `${currentPart}/`;
+    } else {
+      return commonPath;
+    }
+  }
+
+  return commonPath;
 }
 
 
